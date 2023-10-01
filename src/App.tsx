@@ -15,11 +15,12 @@ function App() {
             <Route
               key={index}
               path={route.path}
-              component={
+              exact
+              render={() => (
                 <Layout>
                   <Page />
                 </Layout>
-              }
+              )}
             />
           )
         })}
