@@ -8,12 +8,13 @@ type RoutesType = {
   path: string
   component: React.FC
   layout?: boolean | null
+  isLogin?: boolean
 }
 
 const publicRoutes: RoutesType[] = [
   { path: config.routes.home, component: Home },
   { path: config.routes.mark_exam, component: MarkExam },
-  { path: config.routes.login, component: Login },
+  { path: config.routes.login, component: Login, isLogin: true },
 ]
 
 const privateRoutes: RoutesType[] = []

@@ -1,6 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&family=Montserrat:wght@300;500;600;700&family=Roboto:wght@100;300;400;500;700&display=swap');
 @import 'normalize.css';
 
+:root {
+  // Box properties
+  --global_shadow: 0px 16px 24px rgba(0, 0, 0, 0.06),
+    0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  --borderRadiusSm: 4px;
+  --borderRadiusMd: 8px;
+  --borderRadiusLg: 16px;
+
+  --loginWidth: 300px;
+  --loginHeight: 300px;
+  --loginPadding: 12px;
+
+  // Colors defined
+  --gray-color: #eef4ff;
+  --white-color: #fff;
+  --black-color: #000;
+}
+
 * {
   margin: 0;
   padding: 0;

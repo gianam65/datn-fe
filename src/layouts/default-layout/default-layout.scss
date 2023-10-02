@@ -1,0 +1,11 @@
+.default__layout {
+  .container {
+    display: flex;
+    .side__menu {
+      width: 30%;
+    }
+    .main__content {
+      flex: 1;
+    }
+  }
+}
