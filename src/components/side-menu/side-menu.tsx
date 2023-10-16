@@ -1,40 +1,58 @@
 import './side-menu.scss'
 import React from 'react'
 import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+  BarChartOutlined,
+  FormOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
+import type { MenuProps } from 'antd'
+import {
+  HOME_PAGE_LINK,
+  MARK_EXAM_LINK,
+  REPORT_LINK,
+} from '../../constants/constants'
+import useRouter from '../../hooks/useRouter'
 
 const { Sider } = Layout
+
 type SideMenuProps = {
   collapsed: boolean
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
+  const { pushRoute } = useRouter()
+  const handleNavigate: MenuProps['onClick'] = ({ key }) => {
+    pushRoute(key)
+  }
   return (
     <div className="side__menu-container">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider
+        className="side__menu-list"
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+      >
         <Menu
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
+          onClick={handleNavigate}
           items={[
             {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
+              key: HOME_PAGE_LINK,
+              icon: <AppstoreOutlined />,
+              label: 'Dash board',
             },
             {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              key: MARK_EXAM_LINK,
+              icon: <FormOutlined />,
+              label: 'Score the test',
             },
             {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
+              key: REPORT_LINK,
+              icon: <BarChartOutlined />,
+              label: 'Reports',
             },
           ]}
         />

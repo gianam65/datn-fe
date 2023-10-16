@@ -1,6 +1,11 @@
 .default__layout {
-  .container {
+  width: 100%;
+  overflow-x: hidden;
+  .main__container {
     display: flex;
+    min-height: 100vh;
+    height: 100%;
+    overflow-y: scroll;
     .side__menu {
       width: 30%;
     }

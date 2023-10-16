@@ -14,13 +14,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
   return (
     <div className="default__layout">
-      {/* <div className="container">
-        <div className="side__menu">
-          <SideMenu />
-        </div>
-        <div className="main__content">{children}</div>
-      </div> */}
-      <Layout className="container">
+      <Layout className="main__container">
         <SideMenu collapsed={collapsed} />
         <Layout>
           <Header>
