@@ -1,0 +1,16 @@
+.mark__exam-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  .mark__exam-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .mark__steps-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+}

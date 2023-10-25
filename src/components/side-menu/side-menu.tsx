@@ -22,7 +22,8 @@ type SideMenuProps = {
 
 const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
   const { pushRoute } = useRouter()
-  const handleNavigate: MenuProps['onClick'] = ({ key }) => {
+  const handleNavigate: MenuProps['onClick'] = ({ key, domEvent }) => {
+    domEvent.preventDefault()
     pushRoute(key)
   }
   return (
@@ -36,7 +37,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[HOME_PAGE_LINK]}
           onClick={handleNavigate}
           items={[
             {

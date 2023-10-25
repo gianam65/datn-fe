@@ -1,0 +1,28 @@
+.home__page-container {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+  .home__page-item {
+    width: calc(100% / 4 - 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    cursor: pointer;
+    transition: 0.15s all ease-in-out;
+    &:hover {
+      filter: brightness(0.9);
+    }
+    .card__icon {
+      font-size: 32px;
+      text-align: center;
+    }
+    .card__title {
+      font-weight: 500;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.radio__input-list {
+  display: flex;
+  // flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  .radio__input-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+}

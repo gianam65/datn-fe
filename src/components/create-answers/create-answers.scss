@@ -1,0 +1,11 @@
+.create__answers-container {
+  .create__answers-inps {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .create__answers-input {
+      width: calc(100% / 3 - 20px);
+    }
+  }
+}

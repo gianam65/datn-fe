@@ -1,0 +1,13 @@
+.question__generator-container {
+  .question {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .question__number {
+      width: 20px;
+    }
+    .question__choice {
+      flex: 1;
+    }
+  }
+}

@@ -1,36 +1,73 @@
+import React, { ReactNode, useState, useEffect } from 'react'
+import {
+  AppstoreOutlined,
+  BarChartOutlined,
+  FormOutlined,
+} from '@ant-design/icons'
+import type { MenuProps } from 'antd'
+import { Layout, Menu } from 'antd'
 import './default-layout.scss'
-import React, { ReactNode, useState } from 'react'
-import SideMenu from '../../components/side-menu/side-menu'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { Layout, Button } from 'antd'
+import useRouter from '../../hooks/useRouter'
+import {
+  HOME_PAGE_LINK,
+  MARK_EXAM_LINK,
+  REPORT_LINK,
+} from '../../constants/constants'
+import { useLocation } from 'react-router-dom'
+const { Content, Sider } = Layout
 
-const { Header, Content } = Layout
+// eslint-disable-next-line react-refresh/only-export-components
+export const ITEMS = [
+  {
+    key: HOME_PAGE_LINK,
+    icon: <AppstoreOutlined />,
+    label: 'Trang chủ',
+  },
+  {
+    key: MARK_EXAM_LINK,
+    icon: <FormOutlined />,
+    label: 'Chấm điểm',
+  },
+  {
+    key: REPORT_LINK,
+    icon: <BarChartOutlined />,
+    label: 'Thống kê',
+  },
+]
 
 type DefaultLayoutProps = {
   children: ReactNode
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const { pushRoute } = useRouter()
+  const [selectedKey, setSelectedKey] = useState('')
+  const location = useLocation()
+
+  useEffect(() => {
+    setSelectedKey(location.pathname)
+  }, [location.pathname])
+
+  const handleNavigate: MenuProps['onClick'] = ({ key, domEvent }) => {
+    domEvent.preventDefault()
+    pushRoute(key)
+  }
+
   return (
-    <div className="default__layout">
-      <Layout className="main__container">
-        <SideMenu collapsed={collapsed} />
-        <Layout>
-          <Header>
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              style={{
-                background: '#FFF',
-              }}
-            />
-          </Header>
-          <Content className="main__content">{children}</Content>
-        </Layout>
+    <Layout hasSider className="default__layout">
+      <Sider className="side__menu-container">
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[selectedKey]}
+          items={ITEMS}
+          onSelect={handleNavigate}
+        />
+      </Sider>
+      <Layout className="main__content">
+        <Content className="main__content-children">{children}</Content>
       </Layout>
-    </div>
+    </Layout>
   )
 }
 
