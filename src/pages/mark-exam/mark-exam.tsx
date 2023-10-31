@@ -7,22 +7,26 @@ import {
   ReadOutlined,
 } from '@ant-design/icons'
 import CreateAnswers from '../../components/create-answers/create-answers'
+import FileUpload from '../../components/file-upload/file-upload'
 
 const steps = [
   {
     title: 'Tạo đáp án',
     content: <CreateAnswers />,
     icon: <FileImageOutlined />,
+    needNextBtn: true,
   },
   {
     title: 'Chấm điểm',
-    content: 'Second-content',
+    content: <FileUpload />,
     icon: <FileDoneOutlined />,
+    needNextBtn: false,
   },
   {
     title: 'Kết quả',
     content: 'Last-content',
     icon: <ReadOutlined />,
+    needNextBtn: false,
   },
 ]
 
@@ -50,7 +54,8 @@ const MarkExam: React.FC = () => {
       <Steps size="small" current={current} items={items} />
       <div className="mark__exam-content">{steps[current].content}</div>
       <div className="mark__steps-box">
-        {current < steps.length - 1 && (
+        {current > 0 && <Button onClick={() => prev()}>Quay lại</Button>}
+        {current < steps.length - 1 && steps[current].needNextBtn && (
           <Button type="primary" onClick={() => next()}>
             Bước tiếp
           </Button>
@@ -63,7 +68,6 @@ const MarkExam: React.FC = () => {
             Hoàn thành
           </Button>
         )}
-        {current > 0 && <Button onClick={() => prev()}>Quay lại</Button>}
       </div>
     </div>
   )
