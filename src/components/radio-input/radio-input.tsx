@@ -6,11 +6,13 @@ import cn from 'classnames'
 interface RadioInputProps {
   numberOfOptions: number
   className?: string
+  onRadioChange: (value: number) => void
 }
 
 const RadioInput: React.FC<RadioInputProps> = ({
   numberOfOptions,
   className = '',
+  onRadioChange,
 }) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
 
@@ -20,7 +22,9 @@ const RadioInput: React.FC<RadioInputProps> = ({
   )
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(parseInt(e.target.value))
+    const value = parseInt(e.target.value)
+    setSelectedOption(value)
+    onRadioChange(value)
   }
 
   return (

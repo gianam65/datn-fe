@@ -1,8 +1,17 @@
 .question__generator-container {
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 12px;
+  gap: 2px;
   .question {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
     .question__number {
       width: 20px;
     }
