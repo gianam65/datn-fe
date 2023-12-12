@@ -3,9 +3,23 @@ import React, { useState } from 'react'
 import NumericInput from '../numeric-input/numeric-input'
 import QuestionGenerators from '../question-generators/question-generators'
 
-const CreateAnswers: React.FC = () => {
+interface CreateAnswersProps {
+  onSetSelectedAnswers: (answers: { [key: number]: string }) => void
+}
+
+const CreateAnswers: React.FC<CreateAnswersProps> = ({
+  onSetSelectedAnswers,
+}) => {
   const [numberQuestions, setNumberQuestions] = useState(0)
   const [numberChoices, setNumberChoices] = useState(0)
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: string
+  }>({})
+
+  const updateSelectedAnswers = (answers: { [key: number]: string }) => {
+    setSelectedAnswers(answers)
+    onSetSelectedAnswers(answers)
+  }
 
   return (
     <div className="create__answers-container">
@@ -31,6 +45,7 @@ const CreateAnswers: React.FC = () => {
             <div className="preview__title">Phiếu trả lời trắc nghiệm</div>
             <div className="preview__info">
               <div className="info__title">Phần thông tin</div>
+              <div className="grade"></div>
               <div className="info__detail">
                 <span>1. Họ tên thí sinh:</span>
                 <span className="dot"></span>
@@ -59,6 +74,8 @@ const CreateAnswers: React.FC = () => {
             <QuestionGenerators
               numberOfQuestions={numberQuestions}
               numberOfChoices={numberChoices}
+              selectedAnswers={selectedAnswers}
+              onSetSelectedAnswers={updateSelectedAnswers}
             />
           </div>
         </div>

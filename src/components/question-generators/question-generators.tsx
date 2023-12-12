@@ -1,19 +1,20 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import RadioInput from '../radio-input/radio-input'
 import './question-generators.scss'
 
 interface QuestionGeneratorsProps {
   numberOfQuestions: number
   numberOfChoices: number
+  selectedAnswers: { [key: number]: string }
+  onSetSelectedAnswers: (answers: { [key: number]: string }) => void
 }
 
 const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
   numberOfQuestions,
   numberOfChoices,
+  selectedAnswers,
+  onSetSelectedAnswers,
 }) => {
-  const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: number
-  }>({})
   const provideQuestions = useMemo(() => {
     let questions: number[] = []
 
@@ -23,13 +24,10 @@ const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
     return questions
   }, [numberOfQuestions])
 
-  const handleAnswersQuestion = (index: number, value: number) => {
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [index]: value,
-    }))
+  const handleAnswersQuestion = (index: number, value: string) => {
+    const updatedAnswers = { ...selectedAnswers, [index]: value }
+    onSetSelectedAnswers(updatedAnswers)
   }
-  console.log('selectedAnswers :>> ', selectedAnswers)
 
   return (
     <div className="question__generator-container">
@@ -39,7 +37,7 @@ const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
           <RadioInput
             className="question__choice"
             numberOfOptions={numberOfChoices}
-            onRadioChange={(value: number) => handleAnswersQuestion(idx, value)}
+            onRadioChange={(value: string) => handleAnswersQuestion(idx, value)}
           />
         </div>
       ))}

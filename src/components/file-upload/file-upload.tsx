@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDropzone, FileRejection } from 'react-dropzone'
 import './file-upload.scss'
 import {
@@ -7,15 +7,21 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons'
 import { Button } from 'antd'
+import axios from 'axios'
 
-interface FileUploadProps {}
+interface FileUploadProps {
+  answers: {
+    [key: number]: string
+  }
+}
 
 const acceptConfig = {
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = () => {
+const FileUpload: React.FC<FileUploadProps> = ({ answers }) => {
+  const [imageSrc, setImageSrc] = useState<string>('')
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({
       accept: acceptConfig,
@@ -49,6 +55,25 @@ const FileUpload: React.FC<FileUploadProps> = () => {
     ))
   }, [fileRejections])
 
+  const handleMarkExams = async () => {
+    const formData = new FormData()
+    formData.append('image', acceptedFiles?.[0])
+    console.log('answers :>> ', answers)
+    formData.append('default_result', JSON.stringify(Object.values(answers)))
+
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:5000/process_image',
+        formData,
+      )
+      const imageData = response.data.processed_image
+
+      setImageSrc(`data:image/jpeg;base64,${imageData}`)
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
   return (
     <section className="file__upload-container">
       <div {...getRootProps({ className: 'dropzone file__upload-inp' })}>
@@ -67,9 +92,17 @@ const FileUpload: React.FC<FileUploadProps> = () => {
         className="mark__exam-btn"
         type="primary"
         disabled={acceptedFileItems.length === 0}
+        onClick={handleMarkExams}
       >
         Bắt đầu chấm bài
       </Button>
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt="Processed Image"
+          style={{ width: '100%', objectFit: 'cover' }}
+        />
+      )}
     </section>
   )
 }

@@ -8,30 +8,38 @@ import {
 } from '@ant-design/icons'
 import CreateAnswers from '../../components/create-answers/create-answers'
 import FileUpload from '../../components/file-upload/file-upload'
+import WebcamFeed from '../../components/test/test'
 
 const steps = [
   {
     title: 'Tạo đáp án',
-    content: <CreateAnswers />,
+    // content: <CreateAnswers />,
     icon: <FileImageOutlined />,
     needNextBtn: true,
   },
   {
     title: 'Chấm điểm',
-    content: <FileUpload />,
+    // content: <FileUpload />,
     icon: <FileDoneOutlined />,
-    needNextBtn: false,
+    needNextBtn: true,
   },
   {
     title: 'Kết quả',
-    content: 'Last-content',
+    // content: <WebcamFeed />,
     icon: <ReadOutlined />,
-    needNextBtn: false,
+    // needNextBtn: false,
   },
 ]
 
 const MarkExam: React.FC = () => {
   const [current, setCurrent] = useState(0)
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: string
+  }>({})
+
+  const handleSetSelectedAnswers = (answers: { [key: number]: string }) => {
+    setSelectedAnswers(answers)
+  }
 
   const next = () => {
     setCurrent(current + 1)
@@ -52,7 +60,16 @@ const MarkExam: React.FC = () => {
   return (
     <div className="mark__exam-container">
       <Steps size="small" current={current} items={items} />
-      <div className="mark__exam-content">{steps[current].content}</div>
+      <div className="mark__exam-content">
+        {/* {steps[current].content} */}
+        {current === 0 ? (
+          <CreateAnswers onSetSelectedAnswers={handleSetSelectedAnswers} />
+        ) : current === 1 ? (
+          <FileUpload answers={selectedAnswers} />
+        ) : (
+          <WebcamFeed />
+        )}
+      </div>
       <div className="mark__steps-box">
         {current > 0 && <Button onClick={() => prev()}>Quay lại</Button>}
         {current < steps.length - 1 && steps[current].needNextBtn && (

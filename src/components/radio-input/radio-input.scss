@@ -2,11 +2,15 @@
   display: flex;
   // flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   .radio__input-item {
     display: flex;
     align-items: center;
     gap: 4px;
     cursor: pointer;
+    input {
+      width: 25px;
+      height: 25px;
+    }
   }
 }
