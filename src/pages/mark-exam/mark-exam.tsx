@@ -1,5 +1,5 @@
 import './mark-exam.scss'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Button, Steps } from 'antd'
 import {
   FileImageOutlined,
@@ -7,11 +7,12 @@ import {
   ReadOutlined,
 } from '@ant-design/icons'
 import CreateAnswers from '../../components/create-answers/create-answers'
-import FileUpload from '../../components/file-upload/file-upload'
+// import FileUpload from '../../components/file-upload/file-upload'
 import ShowAnswers from '../../components/show-answers/show-answers'
 import { AnswersResponse } from '../../services/response'
 import useRouter from '../../hooks/useRouter'
 import { RESULT_TEST } from '../../constants/constants'
+import PhotoShoot from '../../components/photo-shoot/photo-shoot'
 
 const steps = [
   {
@@ -37,12 +38,16 @@ const MarkExam: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string
   }>({})
+  useEffect(() => {
+    setAnswers([])
+  }, [])
+  console.log('selectedAnswers :>> ', selectedAnswers)
   const { pushRoute } = useRouter()
 
-  const handleMarkDoneEx = (data: AnswersResponse[]) => {
-    setAnswers(data)
-    setCurrent((prev) => prev + 1)
-  }
+  // const handleMarkDoneEx = (data: AnswersResponse[]) => {
+  //   setAnswers(data)
+  //   setCurrent((prev) => prev + 1)
+  // }
 
   const handleSetSelectedAnswers = (answers: { [key: number]: string }) => {
     setSelectedAnswers(answers)
@@ -74,10 +79,11 @@ const MarkExam: React.FC = () => {
         break
       case 1:
         content = (
-          <FileUpload
-            answers={selectedAnswers}
-            onSetAnswers={handleMarkDoneEx}
-          />
+          // <FileUpload
+          //   answers={selectedAnswers}
+          //   onSetAnswers={handleMarkDoneEx}
+          // />
+          <PhotoShoot />
         )
         break
       case 2:
@@ -90,7 +96,11 @@ const MarkExam: React.FC = () => {
     }
 
     return content
-  }, [current, selectedAnswers, answers])
+  }, [
+    current,
+    // selectedAnswers,
+    answers,
+  ])
 
   return (
     <div className="mark__exam-container">

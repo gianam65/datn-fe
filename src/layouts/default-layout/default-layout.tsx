@@ -62,7 +62,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
 
   return (
     <Layout hasSider className="default__layout">
-      <Sider className="side__menu-container">
+      <Sider className="side__menu-container" collapsible collapsed={true}>
         <Menu
           theme="dark"
           mode="inline"

@@ -60,3 +60,14 @@
     }
   }
 }
+
+@media screen and (max-width: 414px) {
+  .create__answers-container {
+    .create__answers-inps {
+      width: 100%;
+      .create__answers-input {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -518,6 +518,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-html5-camera-photo@^1.5.3":
+  "integrity" "sha512-XDvCjWGCjrUL7yqcXvRTi+Ch9RAOnvGOc5mmji0na9brngMoyxteBPMCrWy2AfHjAFxHiT0a2oaA5sCv6JHFSg=="
+  "resolved" "https://registry.npmjs.org/@types/react-html5-camera-photo/-/react-html5-camera-photo-1.5.3.tgz"
+  "version" "1.5.3"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-router-dom@^5.3.3":
   "integrity" "sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw=="
   "resolved" "https://registry.npmjs.org/@types/react-router-dom/-/react-router-dom-5.3.3.tgz"
@@ -1437,6 +1444,11 @@
   "resolved" "https://registry.npmjs.org/jsesc/-/jsesc-2.5.2.tgz"
   "version" "2.5.2"
 
+"jslib-html5-camera-photo@3.3.4":
+  "integrity" "sha512-qysjLnP4bud0+g0qs5uA/7i569x+6ID2ufgezf9XQ+BE3EvhYjz177vi9WXLEuq+V6C/WXEv73NUICvHm5VGmQ=="
+  "resolved" "https://registry.npmjs.org/jslib-html5-camera-photo/-/jslib-html5-camera-photo-3.3.4.tgz"
+  "version" "3.3.4"
+
 "json-buffer@3.0.1":
   "integrity" "sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ=="
   "resolved" "https://registry.npmjs.org/json-buffer/-/json-buffer-3.0.1.tgz"
@@ -2069,7 +2081,7 @@
   "resolved" "https://registry.npmjs.org/react-chartjs-2/-/react-chartjs-2-5.2.0.tgz"
   "version" "5.2.0"
 
-"react-dom@*", "react-dom@^18.2.0", "react-dom@>=16.0.0", "react-dom@>=16.11.0", "react-dom@>=16.2.0", "react-dom@>=16.9.0":
+"react-dom@*", "react-dom@^18.2.0", "react-dom@>=16.0.0", "react-dom@>=16.11.0", "react-dom@>=16.2.0", "react-dom@>=16.8.0", "react-dom@>=16.9.0":
   "integrity" "sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
   "version" "18.2.0"
@@ -2085,6 +2097,13 @@
     "attr-accept" "^2.2.2"
     "file-selector" "^0.6.0"
     "prop-types" "^15.8.1"
+
+"react-html5-camera-photo@^1.5.11":
+  "integrity" "sha512-5OpdW66UmwKwd0ZHvy/U9tEZj19GrcG6RDRXjs1bFBgJoWzLJoJ7YNd8rmdrizV/6go/z9GrwoWMovqCUyaJgQ=="
+  "resolved" "https://registry.npmjs.org/react-html5-camera-photo/-/react-html5-camera-photo-1.5.11.tgz"
+  "version" "1.5.11"
+  dependencies:
+    "jslib-html5-camera-photo" "3.3.4"
 
 "react-is@^16.12.0", "react-is@^16.13.1", "react-is@^16.6.0", "react-is@^16.7.0":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
@@ -2129,7 +2148,7 @@
   "resolved" "https://registry.npmjs.org/react-webcam/-/react-webcam-7.2.0.tgz"
   "version" "7.2.0"
 
-"react@*", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^18.2.0", "react@>= 16.8 || 18.0.0", "react@>=15", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.13.1", "react@>=16.2.0", "react@>=16.9.0":
+"react@*", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^18.2.0", "react@>= 16.8 || 18.0.0", "react@>=15", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.13.1", "react@>=16.2.0", "react@>=16.8.0", "react@>=16.9.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
