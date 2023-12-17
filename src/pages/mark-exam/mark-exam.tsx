@@ -1,6 +1,6 @@
 import './mark-exam.scss'
 import React, { useState, useMemo } from 'react'
-import { Button, message, Steps } from 'antd'
+import { Button, Steps } from 'antd'
 import {
   FileImageOutlined,
   FileDoneOutlined,
@@ -8,23 +8,24 @@ import {
 } from '@ant-design/icons'
 import CreateAnswers from '../../components/create-answers/create-answers'
 import FileUpload from '../../components/file-upload/file-upload'
+import ShowAnswers from '../../components/show-answers/show-answers'
+import { AnswersResponse } from '../../services/response'
+import useRouter from '../../hooks/useRouter'
+import { RESULT_TEST } from '../../constants/constants'
 
 const steps = [
   {
     title: 'Tạo đáp án',
-    content: <CreateAnswers />,
     icon: <FileImageOutlined />,
     needNextBtn: true,
   },
   {
     title: 'Chấm điểm',
-    content: <FileUpload />,
     icon: <FileDoneOutlined />,
     needNextBtn: false,
   },
   {
     title: 'Kết quả',
-    content: 'Last-content',
     icon: <ReadOutlined />,
     needNextBtn: false,
   },
@@ -32,6 +33,20 @@ const steps = [
 
 const MarkExam: React.FC = () => {
   const [current, setCurrent] = useState(0)
+  const [answers, setAnswers] = useState<AnswersResponse[]>([])
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: string
+  }>({})
+  const { pushRoute } = useRouter()
+
+  const handleMarkDoneEx = (data: AnswersResponse[]) => {
+    setAnswers(data)
+    setCurrent((prev) => prev + 1)
+  }
+
+  const handleSetSelectedAnswers = (answers: { [key: number]: string }) => {
+    setSelectedAnswers(answers)
+  }
 
   const next = () => {
     setCurrent(current + 1)
@@ -49,10 +64,38 @@ const MarkExam: React.FC = () => {
     }))
   }, [])
 
+  const renderContent = useMemo(() => {
+    let content = null
+    switch (current) {
+      case 0:
+        content = (
+          <CreateAnswers onSetSelectedAnswers={handleSetSelectedAnswers} />
+        )
+        break
+      case 1:
+        content = (
+          <FileUpload
+            answers={selectedAnswers}
+            onSetAnswers={handleMarkDoneEx}
+          />
+        )
+        break
+      case 2:
+        content = <ShowAnswers markedExam={answers} />
+        break
+      default:
+        content = (
+          <CreateAnswers onSetSelectedAnswers={handleSetSelectedAnswers} />
+        )
+    }
+
+    return content
+  }, [current, selectedAnswers, answers])
+
   return (
     <div className="mark__exam-container">
       <Steps size="small" current={current} items={items} />
-      <div className="mark__exam-content">{steps[current].content}</div>
+      <div className="mark__exam-content">{renderContent}</div>
       <div className="mark__steps-box">
         {current > 0 && <Button onClick={() => prev()}>Quay lại</Button>}
         {current < steps.length - 1 && steps[current].needNextBtn && (
@@ -61,10 +104,7 @@ const MarkExam: React.FC = () => {
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success('Hoàn thành chấm bài!')}
-          >
+          <Button type="primary" onClick={() => pushRoute(RESULT_TEST)}>
             Hoàn thành
           </Button>
         )}

@@ -38,6 +38,11 @@
         padding: 8px;
         border: 1px solid var(--border-color);
         gap: 4px;
+        .grade {
+          width: 100px;
+          height: 30px;
+          border: 1px solid var(--border-color);
+        }
         .info__title {
           font-weight: 500;
         }

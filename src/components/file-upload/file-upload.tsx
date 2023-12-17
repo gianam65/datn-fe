@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDropzone, FileRejection } from 'react-dropzone'
 import './file-upload.scss'
 import {
@@ -7,19 +7,36 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons'
 import { Button } from 'antd'
+import { loadingState } from '../../recoil/store/app'
+import { useSetRecoilState } from 'recoil'
+import { notification } from 'antd'
+import { httpPost } from '../../services/request'
+import { AnswersResponse } from '../../services/response'
 
-interface FileUploadProps {}
+interface FileUploadProps {
+  answers: {
+    [key: number]: string
+  }
+  onSetAnswers: (data: AnswersResponse[]) => void
+}
 
 const acceptConfig = {
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = () => {
-  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
-    useDropzone({
-      accept: acceptConfig,
-    })
+const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
+  const [acceptedFiles, setAcceptedFiles] = useState<File[]>([])
+  const setLoading = useSetRecoilState(loadingState)
+
+  const { fileRejections, getRootProps, getInputProps } = useDropzone({
+    accept: acceptConfig,
+    onDrop: (files) => setAcceptedFiles(files),
+  })
+
+  const handleDeselectFiles = (file: File) => {
+    setAcceptedFiles((prevFiles) => prevFiles.filter((f) => f !== file))
+  }
 
   const acceptedFileItems = useMemo(() => {
     return acceptedFiles.map((file) => (
@@ -31,7 +48,10 @@ const FileUpload: React.FC<FileUploadProps> = () => {
             <span className="infor__detail-size">{file.size} bytes</span>
           </div>
         </div>
-        <DeleteOutlined className="file__delete-icon" />
+        <DeleteOutlined
+          className="file__delete-icon"
+          onClick={() => handleDeselectFiles(file)}
+        />
       </div>
     ))
   }, [acceptedFiles])
@@ -48,6 +68,38 @@ const FileUpload: React.FC<FileUploadProps> = () => {
       </div>
     ))
   }, [fileRejections])
+
+  const handleMarkExams = async () => {
+    try {
+      setLoading(true)
+      const promises = acceptedFiles.map(async (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append(
+          'default_result',
+          JSON.stringify(Object.values(answers)),
+        )
+
+        const data: AnswersResponse = await httpPost('/process_image', formData)
+        return data
+      })
+      const response: AnswersResponse[] = await Promise.all(promises)
+      onSetAnswers && onSetAnswers(response)
+      notification.open({
+        type: 'success',
+        message: 'Đã chấm thành công các bài thi tải lên',
+      })
+      setLoading(false)
+    } catch (error) {
+      console.log('error :>> ', error)
+      notification.open({
+        type: 'error',
+        message: 'Có lỗi xảy ra, vui lòng thử lại sau',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <section className="file__upload-container">
@@ -67,6 +119,7 @@ const FileUpload: React.FC<FileUploadProps> = () => {
         className="mark__exam-btn"
         type="primary"
         disabled={acceptedFileItems.length === 0}
+        onClick={handleMarkExams}
       >
         Bắt đầu chấm bài
       </Button>

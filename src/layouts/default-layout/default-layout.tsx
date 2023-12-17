@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   BarChartOutlined,
   FormOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Layout, Menu } from 'antd'
@@ -12,6 +13,7 @@ import {
   HOME_PAGE_LINK,
   MARK_EXAM_LINK,
   REPORT_LINK,
+  RESULT_TEST,
 } from '../../constants/constants'
 import { useLocation } from 'react-router-dom'
 const { Content, Sider } = Layout
@@ -27,6 +29,11 @@ export const ITEMS = [
     key: MARK_EXAM_LINK,
     icon: <FormOutlined />,
     label: 'Chấm điểm',
+  },
+  {
+    key: RESULT_TEST,
+    icon: <FileDoneOutlined />,
+    label: 'Kết quả chấm',
   },
   {
     key: REPORT_LINK,

@@ -4,6 +4,7 @@ import {
   BarChartOutlined,
   FormOutlined,
   AppstoreOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
 import type { MenuProps } from 'antd'
@@ -11,6 +12,7 @@ import {
   HOME_PAGE_LINK,
   MARK_EXAM_LINK,
   REPORT_LINK,
+  RESULT_TEST,
 } from '../../constants/constants'
 import useRouter from '../../hooks/useRouter'
 
@@ -49,6 +51,11 @@ const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
               key: MARK_EXAM_LINK,
               icon: <FormOutlined />,
               label: 'Score the test',
+            },
+            {
+              key: RESULT_TEST,
+              icon: <FileDoneOutlined />,
+              label: 'Result',
             },
             {
               key: REPORT_LINK,
