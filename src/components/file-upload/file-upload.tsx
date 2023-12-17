@@ -7,12 +7,17 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons'
 import { Button } from 'antd'
-import axios from 'axios'
+import { loadingState } from '../../recoil/store/app'
+import { useSetRecoilState } from 'recoil'
+import { notification } from 'antd'
+import { httpPost } from '../../services/request'
+import { AnswersResponse } from '../../services/response'
 
 interface FileUploadProps {
   answers: {
     [key: number]: string
   }
+  onSetAnswers: (data: AnswersResponse[]) => void
 }
 
 const acceptConfig = {
@@ -20,12 +25,18 @@ const acceptConfig = {
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ answers }) => {
-  const [imageSrc, setImageSrc] = useState<string>('')
-  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
-    useDropzone({
-      accept: acceptConfig,
-    })
+const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
+  const [acceptedFiles, setAcceptedFiles] = useState<File[]>([])
+  const setLoading = useSetRecoilState(loadingState)
+
+  const { fileRejections, getRootProps, getInputProps } = useDropzone({
+    accept: acceptConfig,
+    onDrop: (files) => setAcceptedFiles(files),
+  })
+
+  const handleDeselectFiles = (file: File) => {
+    setAcceptedFiles((prevFiles) => prevFiles.filter((f) => f !== file))
+  }
 
   const acceptedFileItems = useMemo(() => {
     return acceptedFiles.map((file) => (
@@ -37,7 +48,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers }) => {
             <span className="infor__detail-size">{file.size} bytes</span>
           </div>
         </div>
-        <DeleteOutlined className="file__delete-icon" />
+        <DeleteOutlined
+          className="file__delete-icon"
+          onClick={() => handleDeselectFiles(file)}
+        />
       </div>
     ))
   }, [acceptedFiles])
@@ -56,21 +70,34 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers }) => {
   }, [fileRejections])
 
   const handleMarkExams = async () => {
-    const formData = new FormData()
-    formData.append('image', acceptedFiles?.[0])
-    console.log('answers :>> ', answers)
-    formData.append('default_result', JSON.stringify(Object.values(answers)))
-
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:5000/process_image',
-        formData,
-      )
-      const imageData = response.data.processed_image
+      setLoading(true)
+      const promises = acceptedFiles.map(async (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append(
+          'default_result',
+          JSON.stringify(Object.values(answers)),
+        )
 
-      setImageSrc(`data:image/jpeg;base64,${imageData}`)
+        const data: AnswersResponse = await httpPost('/process_image', formData)
+        return data
+      })
+      const response: AnswersResponse[] = await Promise.all(promises)
+      onSetAnswers && onSetAnswers(response)
+      notification.open({
+        type: 'success',
+        message: 'Đã chấm thành công các bài thi tải lên',
+      })
+      setLoading(false)
     } catch (error) {
-      console.error('Error:', error)
+      console.log('error :>> ', error)
+      notification.open({
+        type: 'error',
+        message: 'Có lỗi xảy ra, vui lòng thử lại sau',
+      })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -96,13 +123,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers }) => {
       >
         Bắt đầu chấm bài
       </Button>
-      {imageSrc && (
-        <img
-          src={imageSrc}
-          alt="Processed Image"
-          style={{ width: '100%', objectFit: 'cover' }}
-        />
-      )}
     </section>
   )
 }

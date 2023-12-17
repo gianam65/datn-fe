@@ -4,22 +4,17 @@ import { CHOICE_TO_LABEL } from '../../constants/constants'
 import cn from 'classnames'
 
 interface RadioInputProps {
-  numberOfOptions: number
   className?: string
   onRadioChange: (value: string) => void
 }
 
 const RadioInput: React.FC<RadioInputProps> = ({
-  numberOfOptions,
   className = '',
   onRadioChange,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
-  const options = Array.from(
-    { length: numberOfOptions },
-    (_, index) => index + 1,
-  )
+  const options = Array.from({ length: 4 }, (_, index) => index + 1)
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

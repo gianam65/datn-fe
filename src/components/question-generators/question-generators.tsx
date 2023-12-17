@@ -4,14 +4,12 @@ import './question-generators.scss'
 
 interface QuestionGeneratorsProps {
   numberOfQuestions: number
-  numberOfChoices: number
   selectedAnswers: { [key: number]: string }
   onSetSelectedAnswers: (answers: { [key: number]: string }) => void
 }
 
 const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
   numberOfQuestions,
-  numberOfChoices,
   selectedAnswers,
   onSetSelectedAnswers,
 }) => {
@@ -36,7 +34,6 @@ const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
           <span className="question__number">{pQ}.</span>
           <RadioInput
             className="question__choice"
-            numberOfOptions={numberOfChoices}
             onRadioChange={(value: string) => handleAnswersQuestion(idx, value)}
           />
         </div>
