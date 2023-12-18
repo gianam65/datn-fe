@@ -41,7 +41,6 @@ const MarkExam: React.FC = () => {
   useEffect(() => {
     setAnswers([])
   }, [])
-  console.log('selectedAnswers :>> ', selectedAnswers)
   const { pushRoute } = useRouter()
 
   // const handleMarkDoneEx = (data: AnswersResponse[]) => {
@@ -83,7 +82,7 @@ const MarkExam: React.FC = () => {
           //   answers={selectedAnswers}
           //   onSetAnswers={handleMarkDoneEx}
           // />
-          <PhotoShoot />
+          <PhotoShoot answers={selectedAnswers} />
         )
         break
       case 2:
@@ -96,11 +95,7 @@ const MarkExam: React.FC = () => {
     }
 
     return content
-  }, [
-    current,
-    // selectedAnswers,
-    answers,
-  ])
+  }, [current, selectedAnswers, answers])
 
   return (
     <div className="mark__exam-container">
