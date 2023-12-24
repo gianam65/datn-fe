@@ -7,12 +7,12 @@ import {
   ReadOutlined,
 } from '@ant-design/icons'
 import CreateAnswers from '../../components/create-answers/create-answers'
-// import FileUpload from '../../components/file-upload/file-upload'
+import FileUpload from '../../components/file-upload/file-upload'
 import ShowAnswers from '../../components/show-answers/show-answers'
 import { AnswersResponse } from '../../services/response'
 import useRouter from '../../hooks/useRouter'
 import { RESULT_TEST } from '../../constants/constants'
-import PhotoShoot from '../../components/photo-shoot/photo-shoot'
+// import PhotoShoot from '../../components/photo-shoot/photo-shoot'
 
 const steps = [
   {
@@ -43,10 +43,10 @@ const MarkExam: React.FC = () => {
   }, [])
   const { pushRoute } = useRouter()
 
-  // const handleMarkDoneEx = (data: AnswersResponse[]) => {
-  //   setAnswers(data)
-  //   setCurrent((prev) => prev + 1)
-  // }
+  const handleMarkDoneEx = (data: AnswersResponse[]) => {
+    setAnswers(data)
+    setCurrent((prev) => prev + 1)
+  }
 
   const handleSetSelectedAnswers = (answers: { [key: number]: string }) => {
     setSelectedAnswers(answers)
@@ -78,11 +78,14 @@ const MarkExam: React.FC = () => {
         break
       case 1:
         content = (
-          // <FileUpload
+          <FileUpload
+            answers={selectedAnswers}
+            onSetAnswers={handleMarkDoneEx}
+          />
+          // <PhotoShoot
           //   answers={selectedAnswers}
           //   onSetAnswers={handleMarkDoneEx}
           // />
-          <PhotoShoot answers={selectedAnswers} />
         )
         break
       case 2:
