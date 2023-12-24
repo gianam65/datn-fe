@@ -4,27 +4,29 @@ import React, { useState } from 'react'
 import 'react-html5-camera-photo/build/css/index.css'
 import ImagePreview from '../image-preview/image-preview'
 import { httpPost } from '../../services/request'
-// import { loadingState } from '../../recoil/store/app'
-// import { useSetRecoilState } from 'recoil'
+import { loadingState } from '../../recoil/store/app'
+import { useSetRecoilState } from 'recoil'
 import { AnswersResponse } from '../../services/response'
+import { notification } from 'antd'
 
 type FacingModeType = 'user' | 'environment'
 type PhotoShootProps = {
   answers: {
     [key: number]: string
   }
+  onSetAnswers: (data: AnswersResponse[]) => void
 }
 
-const PhotoShoot: React.FC<PhotoShootProps> = ({ answers }) => {
+const PhotoShoot: React.FC<PhotoShootProps> = ({ answers, onSetAnswers }) => {
   const [dataUri, setDataUri] = useState('')
-  // const setLoading = useSetRecoilState(loadingState)
+  const setLoading = useSetRecoilState(loadingState)
   const [facingMode, setFacingMode] = useState<FacingModeType>(
     FACING_MODES.USER,
   )
 
   const handleTakePhoto = async (dataUri: string) => {
     setDataUri(dataUri)
-    // setLoading(true)
+    setLoading(true)
     const formData = new FormData()
     const base64String = dataUri.split(',')[1]
     const uint8Array = new Uint8Array(
@@ -36,9 +38,19 @@ const PhotoShoot: React.FC<PhotoShootProps> = ({ answers }) => {
     formData.append('image', blob)
     formData.append('default_result', JSON.stringify(Object.values(answers)))
 
-    const data: AnswersResponse = await httpPost('/process_image', formData)
-    console.log('data :>> ', data)
-    // setLoading(false)
+    try {
+      const data: AnswersResponse = await httpPost('/process_image', formData)
+      setLoading(false)
+
+      onSetAnswers && onSetAnswers([data])
+      notification.open({
+        type: 'success',
+        message: 'Đã chấm thành công các bài thi tải lên',
+      })
+    } catch (error) {
+      console.log('error :>> ', error)
+      setLoading(false)
+    }
   }
   const toggleCamera = () => {
     setFacingMode((prevFacingMode) =>

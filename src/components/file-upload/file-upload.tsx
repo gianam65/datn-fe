@@ -91,7 +91,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
       })
       setLoading(false)
     } catch (error) {
-      console.log('error :>> ', error)
       notification.open({
         type: 'error',
         message: 'Có lỗi xảy ra, vui lòng thử lại sau',
