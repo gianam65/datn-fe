@@ -14,3 +14,14 @@
     gap: 12px;
   }
 }
+
+@media screen and (max-width: 414px) {
+  .mark__exam-container {
+    .mark__steps-box {
+      flex-direction: column;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -7,6 +7,18 @@
     .create__answers-input {
       width: calc(100% / 3 - 20px);
     }
+
+    .import__excel-btn {
+      width: calc(100% / 3 - 20px);
+      position: relative;
+      cursor: pointer;
+
+      input {
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+      }
+    }
   }
   .preview {
     width: 100%;
@@ -65,7 +77,12 @@
   .create__answers-container {
     .create__answers-inps {
       width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
       .create__answers-input {
+        width: 100%;
+      }
+      .import__excel-btn {
         width: 100%;
       }
     }

@@ -8,6 +8,7 @@ import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
 import { AnswersResponse } from '../../services/response'
 import { notification } from 'antd'
+import { Button } from 'antd'
 
 type FacingModeType = 'user' | 'environment'
 type PhotoShootProps = {
@@ -60,18 +61,24 @@ const PhotoShoot: React.FC<PhotoShootProps> = ({ answers, onSetAnswers }) => {
     )
   }
 
-  return dataUri ? (
-    <ImagePreview dataUri={dataUri} />
-  ) : (
-    <>
-      <Camera
-        onTakePhotoAnimationDone={(dataUri) => handleTakePhoto(dataUri)}
-        idealFacingMode={facingMode}
-        // isMaxResolution
-        // imageCompression={1}
-      />
-      <button onClick={toggleCamera}>Toggle Camera</button>
-    </>
+  return (
+    <div className="photo__shoot-container">
+      {dataUri ? (
+        <ImagePreview dataUri={dataUri} />
+      ) : (
+        <>
+          <Camera
+            onTakePhotoAnimationDone={(dataUri) => handleTakePhoto(dataUri)}
+            idealFacingMode={facingMode}
+            // isMaxResolution
+            // imageCompression={1}
+          />
+          <Button type="primary" onClick={toggleCamera}>
+            Xoay ngược camera
+          </Button>
+        </>
+      )}
+    </div>
   )
 }
 

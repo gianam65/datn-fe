@@ -33,6 +33,7 @@ const QuestionGenerators: React.FC<QuestionGeneratorsProps> = ({
         <div className="question" key={idx}>
           <span className="question__number">{pQ}.</span>
           <RadioInput
+            checkedValue={selectedAnswers[idx] || ''}
             className="question__choice"
             onRadioChange={(value: string) => handleAnswersQuestion(idx, value)}
           />

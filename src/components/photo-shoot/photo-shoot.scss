@@ -1,0 +1,12 @@
+.photo__shoot-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+@media screen and (max-width: 414px) {
+  .photo__shoot-container {
+    flex: 1;
+    height: 100%;
+  }
+}

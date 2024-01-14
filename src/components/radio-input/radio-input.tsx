@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './radio-input.scss'
 import { CHOICE_TO_LABEL } from '../../constants/constants'
 import cn from 'classnames'
@@ -6,13 +6,20 @@ import cn from 'classnames'
 interface RadioInputProps {
   className?: string
   onRadioChange: (value: string) => void
+  checkedValue: string
 }
 
 const RadioInput: React.FC<RadioInputProps> = ({
   className = '',
   onRadioChange,
+  checkedValue,
 }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Update the selected option when the checkedValue prop changes
+    setSelectedOption(checkedValue)
+  }, [checkedValue])
 
   const options = Array.from({ length: 4 }, (_, index) => index + 1)
 

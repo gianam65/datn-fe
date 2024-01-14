@@ -1,7 +1,11 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000',
+  // baseURL: 'http://localhost:8000',
+  baseURL: 'https://192.168.1.94:8000',
+  httpsAgent: {
+    rejectUnauthorized: false,
+  },
 })
 
 const httpGet = async (url: string, params = {}) => {

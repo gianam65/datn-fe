@@ -108,3 +108,9 @@
     margin-top: 8px;
   }
 }
+
+@media screen and (max-width: 414px) {
+  .file__upload-container {
+    width: 100%;
+  }
+}
