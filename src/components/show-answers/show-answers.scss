@@ -1,0 +1,17 @@
+.show__answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  button {
+    max-width: 200px;
+  }
+}
+
+@media screen and (max-width: 414px) {
+  .show__answers-container {
+    button {
+      max-width: unset;
+    }
+  }
+}

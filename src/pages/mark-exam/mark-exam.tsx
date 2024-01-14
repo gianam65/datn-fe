@@ -12,13 +12,14 @@ import ShowAnswers from '../../components/show-answers/show-answers'
 import { AnswersResponse } from '../../services/response'
 import useRouter from '../../hooks/useRouter'
 import { RESULT_TEST } from '../../constants/constants'
-// import PhotoShoot from '../../components/photo-shoot/photo-shoot'
+import PhotoShoot from '../../components/photo-shoot/photo-shoot'
 
 const steps = [
   {
     title: 'Tạo đáp án',
     icon: <FileImageOutlined />,
     needNextBtn: true,
+    needExtraBtn: true,
   },
   {
     title: 'Chấm điểm',
@@ -35,9 +36,11 @@ const steps = [
 const MarkExam: React.FC = () => {
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<AnswersResponse[]>([])
+  const [isMarkByCamera, setIsMarkByCamera] = useState(false)
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string
   }>({})
+
   useEffect(() => {
     setAnswers([])
   }, [])
@@ -58,6 +61,7 @@ const MarkExam: React.FC = () => {
 
   const prev = () => {
     setCurrent(current - 1)
+    setIsMarkByCamera(false)
   }
 
   const items = useMemo(() => {
@@ -77,15 +81,16 @@ const MarkExam: React.FC = () => {
         )
         break
       case 1:
-        content = (
+        content = isMarkByCamera ? (
+          <PhotoShoot
+            answers={selectedAnswers}
+            onSetAnswers={handleMarkDoneEx}
+          />
+        ) : (
           <FileUpload
             answers={selectedAnswers}
             onSetAnswers={handleMarkDoneEx}
           />
-          // <PhotoShoot
-          //   answers={selectedAnswers}
-          //   onSetAnswers={handleMarkDoneEx}
-          // />
         )
         break
       case 2:
@@ -98,7 +103,7 @@ const MarkExam: React.FC = () => {
     }
 
     return content
-  }, [current, selectedAnswers, answers])
+  }, [current, selectedAnswers, answers, isMarkByCamera])
 
   return (
     <div className="mark__exam-container">
@@ -107,8 +112,24 @@ const MarkExam: React.FC = () => {
       <div className="mark__steps-box">
         {current > 0 && <Button onClick={() => prev()}>Quay lại</Button>}
         {current < steps.length - 1 && steps[current].needNextBtn && (
-          <Button type="primary" onClick={() => next()}>
-            Bước tiếp
+          <Button
+            type="primary"
+            onClick={() => {
+              next()
+              setIsMarkByCamera(false)
+            }}
+          >
+            {current === 0 ? 'Chấm bằng hình ảnh' : 'Bước tiếp'}
+          </Button>
+        )}
+        {current < steps.length - 1 && steps[current].needExtraBtn && (
+          <Button
+            onClick={() => {
+              next()
+              setIsMarkByCamera(true)
+            }}
+          >
+            Chấm bằng camera
           </Button>
         )}
         {current === steps.length - 1 && (

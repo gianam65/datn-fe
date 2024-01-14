@@ -26,3 +26,11 @@
     }
   }
 }
+
+@media screen and (max-width: 414px) {
+  .home__page-container {
+    .home__page-item {
+      width: calc(100% - 20px);
+    }
+  }
+}
