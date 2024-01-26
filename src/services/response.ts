@@ -10,6 +10,8 @@ export type AnswersResponse = {
     sbd: string
     score: number
   }[]
+  success?: boolean
+  error_message?: string
 }
 
 export type AnswerType = {

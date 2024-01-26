@@ -6,7 +6,6 @@ import { useSetRecoilState } from 'recoil'
 import { AnswersResponse, AnswerType } from '../../services/response'
 import { Table, Tag, Button } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { generateRandomId } from '../../utils/utils'
 import * as ExcelJS from 'exceljs'
 
 type ShowAnswersProps = {
@@ -110,6 +109,16 @@ const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
     URL.revokeObjectURL(url)
   }
 
+  const mapAnswersBeforeRender = (answers: AnswerType[]) => {
+    return answers
+      .map((an) => ({
+        ...an,
+        md: an.md ? an.md : '001',
+        sbd: an.sbd ? an.sbd : '111111',
+      }))
+      .reverse()
+  }
+
   return (
     <div className="show__answers-container">
       <Button type="primary" onClick={handleExportToExcel}>
@@ -117,7 +126,7 @@ const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
       </Button>
       <Table
         columns={columns}
-        dataSource={answers}
+        dataSource={mapAnswersBeforeRender(answers)}
         rowKey={(record) => record.id}
         scroll={{ y: 'calc(100vh - 250px)', x: 'max-content' }}
       />

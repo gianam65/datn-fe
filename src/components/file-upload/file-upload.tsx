@@ -84,11 +84,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
         return data
       })
       const response: AnswersResponse[] = await Promise.all(promises)
-      onSetAnswers && onSetAnswers(response)
-      notification.open({
-        type: 'success',
-        message: 'Đã chấm thành công các bài thi tải lên',
-      })
+      if (response) {
+        const isContainFaslyExam = response.findIndex(
+          (r) => r.success === false,
+        )
+        if (isContainFaslyExam === -1) {
+          onSetAnswers && onSetAnswers(response)
+          notification.open({
+            type: 'success',
+            message: 'Đã chấm thành công các bài thi tải lên',
+          })
+        } else {
+          notification.open({
+            type: 'error',
+            message: response[isContainFaslyExam].error_message,
+          })
+        }
+      }
       setLoading(false)
     } catch (error) {
       notification.open({

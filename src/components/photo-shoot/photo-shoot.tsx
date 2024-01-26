@@ -38,6 +38,7 @@ const PhotoShoot: React.FC<PhotoShootProps> = ({ answers, onSetAnswers }) => {
     const blob = new Blob([uint8Array], { type: 'image/jpeg' })
     formData.append('image', blob)
     formData.append('default_result', JSON.stringify(Object.values(answers)))
+    formData.append('mark_by_camera', 'true')
 
     try {
       const data: AnswersResponse = await httpPost('/process_image', formData)

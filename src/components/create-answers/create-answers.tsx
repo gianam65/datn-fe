@@ -25,6 +25,7 @@ const CreateAnswers: React.FC<CreateAnswersProps> = ({
     setSelectedAnswers(answers)
     onSetSelectedAnswers(answers)
   }
+
   const readFileAsBuffer = (file: File): Promise<Uint8Array> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -92,7 +93,7 @@ const CreateAnswers: React.FC<CreateAnswersProps> = ({
           className="import__excel-btn"
           onChange={handleCreateAnswerWithFile}
         >
-          Nhập điểm bằng file excel
+          Nhập đáp án bằng file excel
           <input type="file" accept=".xlsx, .xls" />
         </Button>
       </div>
