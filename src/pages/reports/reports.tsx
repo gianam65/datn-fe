@@ -84,6 +84,7 @@ const Reports: React.FC = () => {
       },
     ],
   }
+  console.log('chartData :>> ', chartData)
 
   return (
     <div className="reports-container">

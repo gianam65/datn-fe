@@ -4,6 +4,12 @@
     align-items: center;
     gap: 20px;
 
+    .input__class {
+      width: calc(100% / 3 - 20px);
+      padding: 4px 11px;
+      border-radius: 4px;
+    }
+
     .create__answers-input {
       width: calc(100% / 3 - 20px);
     }
@@ -81,6 +87,9 @@
       align-items: flex-start;
       .create__answers-input {
         width: 100%;
+      }
+      input {
+        width: 100% !important;
       }
       .import__excel-btn {
         width: 100%;

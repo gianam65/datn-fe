@@ -16,9 +16,14 @@ type PhotoShootProps = {
     [key: number]: string
   }
   onSetAnswers: (data: AnswersResponse[]) => void
+  selectedClass: string
 }
 
-const PhotoShoot: React.FC<PhotoShootProps> = ({ answers, onSetAnswers }) => {
+const PhotoShoot: React.FC<PhotoShootProps> = ({
+  answers,
+  onSetAnswers,
+  selectedClass,
+}) => {
   const [dataUri, setDataUri] = useState('')
   const setLoading = useSetRecoilState(loadingState)
   const [facingMode, setFacingMode] = useState<FacingModeType>(
@@ -39,11 +44,18 @@ const PhotoShoot: React.FC<PhotoShootProps> = ({ answers, onSetAnswers }) => {
     formData.append('image', blob)
     formData.append('default_result', JSON.stringify(Object.values(answers)))
     formData.append('mark_by_camera', 'true')
+    formData.append('classes', selectedClass)
 
     try {
       const data: AnswersResponse = await httpPost('/process_image', formData)
       setLoading(false)
-
+      if (data.success === false) {
+        notification.open({
+          type: 'error',
+          message: data.error_message,
+        })
+        return
+      }
       onSetAnswers && onSetAnswers([data])
       notification.open({
         type: 'success',

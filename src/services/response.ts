@@ -24,4 +24,7 @@ export type AnswerType = {
   need_re_mark: boolean
   sbd: string
   score: number
+  correct_answer: string
+  image_url?: string
+  classes?: string
 }
