@@ -40,6 +40,7 @@ const MarkExam: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string
   }>({})
+  const [selectedClass, setSelectedClass] = useState<string>('')
 
   useEffect(() => {
     setAnswers([])
@@ -77,7 +78,10 @@ const MarkExam: React.FC = () => {
     switch (current) {
       case 0:
         content = (
-          <CreateAnswers onSetSelectedAnswers={handleSetSelectedAnswers} />
+          <CreateAnswers
+            onSetSelectedAnswers={handleSetSelectedAnswers}
+            onSetSelectedClass={(e) => setSelectedClass(e.target.value)}
+          />
         )
         break
       case 1:
@@ -85,11 +89,13 @@ const MarkExam: React.FC = () => {
           <PhotoShoot
             answers={selectedAnswers}
             onSetAnswers={handleMarkDoneEx}
+            selectedClass={selectedClass}
           />
         ) : (
           <FileUpload
             answers={selectedAnswers}
             onSetAnswers={handleMarkDoneEx}
+            selectedClass={selectedClass}
           />
         )
         break
@@ -98,12 +104,15 @@ const MarkExam: React.FC = () => {
         break
       default:
         content = (
-          <CreateAnswers onSetSelectedAnswers={handleSetSelectedAnswers} />
+          <CreateAnswers
+            onSetSelectedAnswers={handleSetSelectedAnswers}
+            onSetSelectedClass={(e) => setSelectedClass(e.target.value)}
+          />
         )
     }
 
     return content
-  }, [current, selectedAnswers, answers, isMarkByCamera])
+  }, [current, selectedAnswers, answers, isMarkByCamera, selectedClass])
 
   return (
     <div className="mark__exam-container">

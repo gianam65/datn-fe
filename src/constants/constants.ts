@@ -3,6 +3,7 @@ export const MARK_EXAM_LINK = '/cham-diem'
 export const LOGIN_LINK = '/dang-nhap'
 export const REPORT_LINK = '/bao-cao'
 export const RESULT_TEST = '/ket-qua'
+export const RESULT_TEST_DETAIL = '/chi-tiet'
 
 export const CHOICE_TO_LABEL = {
   0: 'A',

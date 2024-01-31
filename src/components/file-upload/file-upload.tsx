@@ -18,6 +18,7 @@ interface FileUploadProps {
     [key: number]: string
   }
   onSetAnswers: (data: AnswersResponse[]) => void
+  selectedClass: string
 }
 
 const acceptConfig = {
@@ -25,7 +26,11 @@ const acceptConfig = {
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+  answers,
+  onSetAnswers,
+  selectedClass,
+}) => {
   const [acceptedFiles, setAcceptedFiles] = useState<File[]>([])
   const setLoading = useSetRecoilState(loadingState)
 
@@ -79,6 +84,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ answers, onSetAnswers }) => {
           'default_result',
           JSON.stringify(Object.values(answers)),
         )
+        formData.append('classes', selectedClass)
+        // formData.append('mark_by_camera', 'True')
 
         const data: AnswersResponse = await httpPost('/process_image', formData)
         return data

@@ -2,10 +2,11 @@ import './create-answers.scss'
 import React, { useState } from 'react'
 import NumericInput from '../numeric-input/numeric-input'
 import QuestionGenerators from '../question-generators/question-generators'
-import { Button } from 'antd'
+import { Button, Input } from 'antd'
 import * as ExcelJS from 'exceljs'
 interface CreateAnswersProps {
   onSetSelectedAnswers: (answers: { [key: number]: string }) => void
+  onSetSelectedClass: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 type ExcelDataType = {
@@ -15,6 +16,7 @@ type ExcelDataType = {
 
 const CreateAnswers: React.FC<CreateAnswersProps> = ({
   onSetSelectedAnswers,
+  onSetSelectedClass,
 }) => {
   const [numberQuestions, setNumberQuestions] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -87,6 +89,12 @@ const CreateAnswers: React.FC<CreateAnswersProps> = ({
           onChange={setNumberQuestions}
           placeholder="Nhập số câu hỏi"
           className="create__answers-input"
+        />
+        <Input
+          type="text"
+          placeholder="Nhập tên lớp"
+          className="input__class"
+          onChange={onSetSelectedClass}
         />
         <Button
           type="primary"

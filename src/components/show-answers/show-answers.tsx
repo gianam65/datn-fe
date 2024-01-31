@@ -4,45 +4,65 @@ import { httpGet } from '../../services/request'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
 import { AnswersResponse, AnswerType } from '../../services/response'
-import { Table, Tag, Button } from 'antd'
+import { Table, Tag, Button, Modal } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import * as ExcelJS from 'exceljs'
+import ResultDetail from '../result_detail/result_detail'
 
 type ShowAnswersProps = {
   markedExam?: AnswersResponse[]
 }
 
-const columns: ColumnsType<AnswerType> = [
-  {
-    title: 'Số báo danh',
-    dataIndex: 'sbd',
-    key: 'sbd',
-  },
-  {
-    title: 'Mã đề',
-    dataIndex: 'md',
-    key: 'md',
-  },
-  {
-    title: 'Nhãn',
-    dataIndex: 'need_re_mark',
-    key: 'need_re_mark',
-    render: (data) => (
-      <Tag color={data ? 'red' : 'green'}>
-        {data ? 'Cần chấm lại' : 'Hợp lệ'}
-      </Tag>
-    ),
-  },
-  {
-    title: 'Điểm',
-    dataIndex: 'score',
-    key: 'score',
-  },
-]
-
 const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
   const [answers, setAnswers] = useState<AnswerType[]>([])
   const setLoading = useSetRecoilState(loadingState)
+  const [detailResult, setDetailResult] = useState<AnswerType>()
+
+  const columns: ColumnsType<AnswerType> = [
+    {
+      title: 'Số báo danh',
+      dataIndex: 'sbd',
+      key: 'sbd',
+    },
+    {
+      title: 'Mã đề',
+      dataIndex: 'md',
+      key: 'md',
+    },
+    {
+      title: 'Lớp',
+      dataIndex: 'classes',
+      key: 'classes',
+    },
+    {
+      title: 'Nhãn',
+      dataIndex: 'need_re_mark',
+      key: 'need_re_mark',
+      render: (data) => (
+        <Tag color={data ? 'red' : 'green'}>
+          {data ? 'Cần chấm lại' : 'Hợp lệ'}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Điểm',
+      dataIndex: 'score',
+      key: 'score',
+    },
+    {
+      title: 'Chi tiết bài thi',
+      render: (record) => {
+        return (
+          <div
+            className="detail_marked"
+            onClick={() => setDetailResult(record)}
+          >
+            Xem tiết bài thi
+          </div>
+        )
+      },
+    },
+  ]
 
   useEffect(() => {
     const getData = async () => {
@@ -69,6 +89,7 @@ const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
     worksheet.columns = [
       { header: 'Số báo danh', key: 'sbd', width: 20 },
       { header: 'Mã đề', key: 'md', width: 10 },
+      { header: 'Lớp', key: 'classes', width: 10 },
       { header: 'Nhãn', key: 'need_re_mark', width: 20 },
       { header: 'Điểm', key: 'score', width: 20 },
     ]
@@ -78,6 +99,7 @@ const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
         md: row.md,
         sbd: row.sbd,
         score: row.score,
+        classes: row.classes,
         need_re_mark: row.need_re_mark ? 'Cần chấm lại' : 'Hợp lệ',
       })
     })
@@ -130,6 +152,16 @@ const ShowAnswers: React.FC<ShowAnswersProps> = ({ markedExam }) => {
         rowKey={(record) => record.id}
         scroll={{ y: 'calc(100vh - 250px)', x: 'max-content' }}
       />
+      <Modal
+        title="Chi tiết bài thi"
+        open={!!detailResult}
+        width={'calc(100vw - 300px)'}
+        onCancel={() => setDetailResult(undefined)}
+        onOk={() => setDetailResult(undefined)}
+        cancelText="Đóng"
+      >
+        <ResultDetail data={detailResult} />
+      </Modal>
     </div>
   )
 }
