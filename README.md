@@ -1,3 +1,10 @@
+# TO RUN THIS PROJECT
+1. Clone the project: `git clone https://github.com/gianam65/datn-fe`
+2. `yarn install`
+3. `yarn dev`
+4. Access to your IP with https protocol: ex `https://192.168.1.1:5173`
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -21,7 +28,3 @@ If you are developing a production application, we recommend updating the config
     tsconfigRootDir: __dirname,
    },
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
