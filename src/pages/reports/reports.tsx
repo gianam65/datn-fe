@@ -2,58 +2,42 @@ import './reports.scss'
 import React, { useState, useEffect } from 'react'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
-import { httpGet } from '../../services/request'
-import { AnswersResponse } from '../../services/response'
+// import { httpGet } from '../../services/request'
 import { Chart } from 'react-chartjs-2'
+import { CarType } from '../../services/response'
 import {
   BarElement,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
   ArcElement,
-  LineController,
-  BarController,
-  ChartOptions,
 } from 'chart.js'
 
-ChartJS.register(
-  ArcElement,
-  BarController,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineController,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-)
+ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend)
 
-const options: ChartOptions = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top',
+      position: 'top' as const,
     },
     title: {
       display: true,
-      text: 'Biểu đồ điểm',
-    },
-  },
-  elements: {
-    bar: {
-      backgroundColor: '#3498db',
-      borderColor: '#2980b9',
-      borderWidth: 1,
+      text: 'Biểu đồ thống kê xe vào, xe ra',
     },
   },
 }
+
+const FAKE_CARS: CarType[] = [...Array(20)].map(() => ({
+  carId: Math.ceil(Math.random() * 99999) + '',
+  frameNumber: Math.ceil(Math.random() * 10e8) + '',
+  engineNumber: Math.ceil(Math.random() * 10e8) + '',
+  status: [false, true]?.[Math.floor(Math.random() * 2)],
+}))
 
 const Reports: React.FC = () => {
   const [dataChart, setDataChart] = useState<number[]>([])
@@ -62,9 +46,24 @@ const Reports: React.FC = () => {
   useEffect(() => {
     const getData = async () => {
       setLoading(true)
-      const response: AnswersResponse = await httpGet('/get_answers')
-      const scores: number[] = response.answers?.map((answer) => answer.score)
-      setDataChart(scores)
+      // const response = await httpGet('/get_cars')
+      // const cars = response.data as CarType[]
+      const cars = FAKE_CARS
+
+      // Transform data to count cars by status
+      const statusCounts = cars.reduce(
+        (acc, car) => {
+          if (car.status) {
+            acc[0] += 1
+          } else {
+            acc[1] += 1
+          }
+          return acc
+        },
+        [0, 0], // [true count, false count]
+      )
+
+      setDataChart(statusCounts)
       setLoading(false)
     }
 
@@ -73,22 +72,26 @@ const Reports: React.FC = () => {
   }, [])
 
   const chartData = {
-    labels: dataChart.map((_, index) => (index + 1).toString()),
+    labels: ['Xe vào', 'Xe ra'],
     datasets: [
       {
-        label: 'Điểm',
+        label: '',
         data: dataChart,
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: ['#2ecc71', '#e74c3c'],
+        borderColor: ['#2980b9', '#c0392b'],
         borderWidth: 1,
-        fill: false,
       },
     ],
   }
-  console.log('chartData :>> ', chartData)
 
   return (
     <div className="reports-container">
-      <Chart type="bar" data={chartData} options={options} />
+      <div className="reports_item">
+        <Chart type="pie" data={chartData} options={options} />
+      </div>
+      <div className="reports_item">
+        <Chart type="bar" data={chartData} options={options} />
+      </div>
     </div>
   )
 }

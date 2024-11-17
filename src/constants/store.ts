@@ -5,5 +5,6 @@ export const STORE = {
   },
   ACCOUNT: {
     ACCOUNT_ID: '@account/accountId',
+    IS_LOGIN: '@account/isLogin',
   },
 }

@@ -2,23 +2,19 @@ import React, { useMemo, useState } from 'react'
 import { useDropzone, FileRejection } from 'react-dropzone'
 import './file-upload.scss'
 import {
-  PlusCircleOutlined,
   FileImageOutlined,
   DeleteOutlined,
+  ScanOutlined,
 } from '@ant-design/icons'
 import { Button } from 'antd'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
 import { notification } from 'antd'
 import { httpPost } from '../../services/request'
-import { AnswersResponse } from '../../services/response'
+import { LicensePlatesResponse } from '../../services/response'
 
 interface FileUploadProps {
-  answers: {
-    [key: number]: string
-  }
-  onSetAnswers: (data: AnswersResponse[]) => void
-  selectedClass: string
+  onSetData?: (data: LicensePlatesResponse[]) => void
 }
 
 const acceptConfig = {
@@ -26,11 +22,7 @@ const acceptConfig = {
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({
-  answers,
-  onSetAnswers,
-  selectedClass,
-}) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onSetData }) => {
   const [acceptedFiles, setAcceptedFiles] = useState<File[]>([])
   const setLoading = useSetRecoilState(loadingState)
 
@@ -74,39 +66,31 @@ const FileUpload: React.FC<FileUploadProps> = ({
     ))
   }, [fileRejections])
 
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   const handleMarkExams = async () => {
     try {
       setLoading(true)
       const promises = acceptedFiles.map(async (file) => {
         const formData = new FormData()
         formData.append('image', file)
-        formData.append(
-          'default_result',
-          JSON.stringify(Object.values(answers)),
-        )
-        formData.append('classes', selectedClass)
-        // formData.append('mark_by_camera', 'True')
 
-        const data: AnswersResponse = await httpPost('/process_image', formData)
+        await sleep(100)
+        const data: LicensePlatesResponse = await httpPost(
+          '/process_image',
+          formData,
+        )
         return data
       })
-      const response: AnswersResponse[] = await Promise.all(promises)
+      const response: LicensePlatesResponse[] = await Promise.all(promises)
       if (response) {
-        const isContainFaslyExam = response.findIndex(
-          (r) => r.success === false,
-        )
-        if (isContainFaslyExam === -1) {
-          onSetAnswers && onSetAnswers(response)
-          notification.open({
-            type: 'success',
-            message: 'Đã chấm thành công các bài thi tải lên',
-          })
-        } else {
-          notification.open({
-            type: 'error',
-            message: response[isContainFaslyExam].error_message,
-          })
-        }
+        onSetData && onSetData(response)
+        notification.open({
+          type: 'success',
+          message: 'Đã quét thành công các biển số xe tải lên',
+        })
       }
       setLoading(false)
     } catch (error) {
@@ -114,7 +98,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
         type: 'error',
         message: 'Có lỗi xảy ra, vui lòng thử lại sau',
       })
-    } finally {
       setLoading(false)
     }
   }
@@ -124,9 +107,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
       <div {...getRootProps({ className: 'dropzone file__upload-inp' })}>
         <input {...getInputProps()} />
         <div className="file__upload-icon">
-          <PlusCircleOutlined />
+          <ScanOutlined />
         </div>
-        <span>Kéo hoặc thả ảnh vào đây để tải lên</span>
         <span>(Chỉ chấp nhận ảnh có định dạng *.jpeg hoặc *.png)</span>
       </div>
       {acceptedFileItems.length > 0 && (
@@ -139,7 +121,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         disabled={acceptedFileItems.length === 0}
         onClick={handleMarkExams}
       >
-        Bắt đầu chấm bài
+        Bắt đầu quét
       </Button>
     </section>
   )

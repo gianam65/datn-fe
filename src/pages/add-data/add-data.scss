@@ -1,0 +1,25 @@
+.add__data-container {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 12px;
+
+  .add__data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  .error-message {
+    color: #e74c3c;
+  }
+
+  .uploaded__img {
+    max-width: 100px;
+    aspect-ratio: 1/1;
+  }
+}

@@ -6,7 +6,7 @@ import ImagePreview from '../image-preview/image-preview'
 import { httpPost } from '../../services/request'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
-import { AnswersResponse } from '../../services/response'
+import { LicensePlatesResponse } from '../../services/response'
 import { notification } from 'antd'
 import { Button } from 'antd'
 
@@ -15,7 +15,7 @@ type PhotoShootProps = {
   answers: {
     [key: number]: string
   }
-  onSetAnswers: (data: AnswersResponse[]) => void
+  onSetAnswers: (data: LicensePlatesResponse[]) => void
   selectedClass: string
 }
 
@@ -47,7 +47,10 @@ const PhotoShoot: React.FC<PhotoShootProps> = ({
     formData.append('classes', selectedClass)
 
     try {
-      const data: AnswersResponse = await httpPost('/process_image', formData)
+      const data: LicensePlatesResponse = await httpPost(
+        '/process_image',
+        formData,
+      )
       setLoading(false)
       if (data.success === false) {
         notification.open({

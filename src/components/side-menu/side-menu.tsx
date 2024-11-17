@@ -10,9 +10,9 @@ import { Layout, Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import {
   HOME_PAGE_LINK,
-  MARK_EXAM_LINK,
+  SCAN_CAR_LINK,
   REPORT_LINK,
-  RESULT_TEST,
+  SCAN_RESULT,
 } from '../../constants/constants'
 import useRouter from '../../hooks/useRouter'
 
@@ -48,12 +48,12 @@ const SideMenu: React.FC<SideMenuProps> = ({ collapsed }) => {
               label: 'Dash board',
             },
             {
-              key: MARK_EXAM_LINK,
+              key: SCAN_CAR_LINK,
               icon: <FormOutlined />,
               label: 'Score the test',
             },
             {
-              key: RESULT_TEST,
+              key: SCAN_RESULT,
               icon: <FileDoneOutlined />,
               label: 'Result',
             },
