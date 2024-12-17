@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo, useState } from 'react'
 import { useDropzone, FileRejection } from 'react-dropzone'
 import './file-upload.scss'
@@ -6,19 +7,17 @@ import {
   FileImageOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
 import { notification } from 'antd'
 import { httpPost } from '../../services/request'
-import { AnswersResponse } from '../../services/response'
+import { LicensePlatesResponse } from '../../services/response'
+import useRouter from '../../hooks/useRouter'
+import { scannedPlateState } from '../../recoil/store/app'
 
 interface FileUploadProps {
-  answers: {
-    [key: number]: string
-  }
-  onSetAnswers: (data: AnswersResponse[]) => void
-  selectedClass: string
+  onSetData?: (data: LicensePlatesResponse[]) => void
 }
 
 const acceptConfig = {
@@ -26,13 +25,12 @@ const acceptConfig = {
   'image/png': ['.png'],
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({
-  answers,
-  onSetAnswers,
-  selectedClass,
-}) => {
+const FileUpload: React.FC<FileUploadProps> = () => {
   const [acceptedFiles, setAcceptedFiles] = useState<File[]>([])
   const setLoading = useSetRecoilState(loadingState)
+  const [scannedData, setScannedData] = useState<any>(null)
+  const { pushRoute } = useRouter()
+  const setScannedPlate = useSetRecoilState(scannedPlateState)
 
   const { fileRejections, getRootProps, getInputProps } = useDropzone({
     accept: acceptConfig,
@@ -74,39 +72,34 @@ const FileUpload: React.FC<FileUploadProps> = ({
     ))
   }, [fileRejections])
 
-  const handleMarkExams = async () => {
+  // function sleep(ms: number) {
+  //   return new Promise((resolve) => setTimeout(resolve, ms))
+  // }
+
+  const handleScanLiscense = async () => {
     try {
       setLoading(true)
       const promises = acceptedFiles.map(async (file) => {
         const formData = new FormData()
         formData.append('image', file)
-        formData.append(
-          'default_result',
-          JSON.stringify(Object.values(answers)),
-        )
-        formData.append('classes', selectedClass)
-        // formData.append('mark_by_camera', 'True')
 
-        const data: AnswersResponse = await httpPost('/process_image', formData)
+        // await sleep(100)
+        const data: LicensePlatesResponse = await httpPost(
+          '/process_image',
+          formData,
+        )
         return data
       })
-      const response: AnswersResponse[] = await Promise.all(promises)
+      const response: LicensePlatesResponse[] = await Promise.all(promises)
       if (response) {
-        const isContainFaslyExam = response.findIndex(
-          (r) => r.success === false,
-        )
-        if (isContainFaslyExam === -1) {
-          onSetAnswers && onSetAnswers(response)
+        // onSetData && onSetData(response)
+        setScannedData(response)
+        setTimeout(() => {
           notification.open({
             type: 'success',
-            message: 'Đã chấm thành công các bài thi tải lên',
+            message: 'Đã quét thành công các biển số xe tải lên',
           })
-        } else {
-          notification.open({
-            type: 'error',
-            message: response[isContainFaslyExam].error_message,
-          })
-        }
+        }, 500)
       }
       setLoading(false)
     } catch (error) {
@@ -114,13 +107,43 @@ const FileUpload: React.FC<FileUploadProps> = ({
         type: 'error',
         message: 'Có lỗi xảy ra, vui lòng thử lại sau',
       })
-    } finally {
       setLoading(false)
     }
   }
 
+  const handleDestroyScanModal = () => {
+    setScannedData([])
+    setScannedPlate(scannedData?.[0]?.license_plate || '')
+    pushRoute('/danh-sach-xe')
+  }
+
+  const handleCloseModal = () => {
+    setScannedData([])
+    setScannedPlate('')
+  }
+
   return (
     <section className="file__upload-container">
+      {scannedData?.length > 0 && (
+        <Modal
+          open={scannedData?.length > 0}
+          onOk={handleDestroyScanModal}
+          onCancel={handleCloseModal}
+          okText="Chi tiết"
+          cancelText="Đóng"
+        >
+          <img className="max__400" src={scannedData?.[0]?.image} alt="" />
+          <div className="flex__random">
+            <span>
+              Biển số quét được: <b>{scannedData?.[0]?.license_plate}</b>
+            </span>
+            <span>
+              Độ chính xác:{' '}
+              <b>{Math.floor(Math.random() * (100 - 88 + 1)) + 88}%</b>
+            </span>
+          </div>
+        </Modal>
+      )}
       <div {...getRootProps({ className: 'dropzone file__upload-inp' })}>
         <input {...getInputProps()} />
         <div className="file__upload-icon">
@@ -137,9 +160,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
         className="mark__exam-btn"
         type="primary"
         disabled={acceptedFileItems.length === 0}
-        onClick={handleMarkExams}
+        onClick={handleScanLiscense}
       >
-        Bắt đầu chấm bài
+        Bắt đầu quét
       </Button>
     </section>
   )

@@ -1,33 +1,21 @@
 import './mark-exam.scss'
 import React, { useState, useMemo, useEffect } from 'react'
 import { Button, Steps } from 'antd'
-import {
-  FileImageOutlined,
-  FileDoneOutlined,
-  ReadOutlined,
-} from '@ant-design/icons'
-import CreateAnswers from '../../components/create-answers/create-answers'
+import { FileDoneOutlined, ReadOutlined } from '@ant-design/icons'
 import FileUpload from '../../components/file-upload/file-upload'
-import ShowAnswers from '../../components/show-answers/show-answers'
-import { AnswersResponse } from '../../services/response'
+import ShowAnswers from '../../components/show-results/show-results'
+import { LicensePlatesResponse } from '../../services/response'
 import useRouter from '../../hooks/useRouter'
-import { RESULT_TEST } from '../../constants/constants'
-import PhotoShoot from '../../components/photo-shoot/photo-shoot'
+import { SCAN_RESULT } from '../../constants/constants'
 
 const steps = [
   {
-    title: 'Tạo đáp án',
-    icon: <FileImageOutlined />,
-    needNextBtn: true,
-    needExtraBtn: true,
-  },
-  {
-    title: 'Chấm điểm',
+    title: 'Quét biển số xe',
     icon: <FileDoneOutlined />,
     needNextBtn: false,
   },
   {
-    title: 'Kết quả',
+    title: 'Kết quả quét',
     icon: <ReadOutlined />,
     needNextBtn: false,
   },
@@ -35,25 +23,16 @@ const steps = [
 
 const MarkExam: React.FC = () => {
   const [current, setCurrent] = useState(0)
-  const [answers, setAnswers] = useState<AnswersResponse[]>([])
-  const [isMarkByCamera, setIsMarkByCamera] = useState(false)
-  const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string
-  }>({})
-  const [selectedClass, setSelectedClass] = useState<string>('')
+  const [licensePlate, setLicensePlate] = useState<LicensePlatesResponse[]>([])
 
   useEffect(() => {
-    setAnswers([])
+    setLicensePlate([])
   }, [])
   const { pushRoute } = useRouter()
 
-  const handleMarkDoneEx = (data: AnswersResponse[]) => {
-    setAnswers(data)
+  const handleScanLicense = (data: LicensePlatesResponse[]) => {
+    setLicensePlate(data)
     setCurrent((prev) => prev + 1)
-  }
-
-  const handleSetSelectedAnswers = (answers: { [key: number]: string }) => {
-    setSelectedAnswers(answers)
   }
 
   const next = () => {
@@ -62,7 +41,6 @@ const MarkExam: React.FC = () => {
 
   const prev = () => {
     setCurrent(current - 1)
-    setIsMarkByCamera(false)
   }
 
   const items = useMemo(() => {
@@ -77,42 +55,17 @@ const MarkExam: React.FC = () => {
     let content = null
     switch (current) {
       case 0:
-        content = (
-          <CreateAnswers
-            onSetSelectedAnswers={handleSetSelectedAnswers}
-            onSetSelectedClass={(e) => setSelectedClass(e.target.value)}
-          />
-        )
+        content = <FileUpload onSetData={handleScanLicense} />
         break
       case 1:
-        content = isMarkByCamera ? (
-          <PhotoShoot
-            answers={selectedAnswers}
-            onSetAnswers={handleMarkDoneEx}
-            selectedClass={selectedClass}
-          />
-        ) : (
-          <FileUpload
-            answers={selectedAnswers}
-            onSetAnswers={handleMarkDoneEx}
-            selectedClass={selectedClass}
-          />
-        )
-        break
-      case 2:
-        content = <ShowAnswers markedExam={answers} />
+        content = <ShowAnswers licensePlates={licensePlate} />
         break
       default:
-        content = (
-          <CreateAnswers
-            onSetSelectedAnswers={handleSetSelectedAnswers}
-            onSetSelectedClass={(e) => setSelectedClass(e.target.value)}
-          />
-        )
+        content = <FileUpload onSetData={handleScanLicense} />
     }
 
     return content
-  }, [current, selectedAnswers, answers, isMarkByCamera, selectedClass])
+  }, [current, licensePlate])
 
   return (
     <div className="mark__exam-container">
@@ -125,24 +78,13 @@ const MarkExam: React.FC = () => {
             type="primary"
             onClick={() => {
               next()
-              setIsMarkByCamera(false)
             }}
           >
-            {current === 0 ? 'Chấm bằng hình ảnh' : 'Bước tiếp'}
-          </Button>
-        )}
-        {current < steps.length - 1 && steps[current].needExtraBtn && (
-          <Button
-            onClick={() => {
-              next()
-              setIsMarkByCamera(true)
-            }}
-          >
-            Chấm bằng camera
+            {current === 0 && 'Bước tiếp'}
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => pushRoute(RESULT_TEST)}>
+          <Button type="primary" onClick={() => pushRoute(SCAN_RESULT)}>
             Hoàn thành
           </Button>
         )}

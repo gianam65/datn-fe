@@ -1,3 +1,14 @@
+.flex__random {
+  display: flex;
+  flex-direction: column;
+}
+
+.max__400 {
+  margin-top: 30px;
+  max-width: 100%;
+  object-fit: cover;
+}
+
 .file__upload-container {
   display: flex;
   align-items: center;
@@ -10,6 +21,7 @@
   background-color: var(--white-color);
   border-radius: 4px;
   box-shadow: var(--box-shadow);
+  
   .file__upload-inp {
     padding: 8px;
     text-align: center;

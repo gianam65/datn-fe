@@ -3,8 +3,9 @@ import MarkExam from '../pages/mark-exam/mark-exam'
 import Login from '../pages/login/login'
 import Reports from '../pages/reports/reports'
 import config from '../config'
-import ShowAnswers from '../components/show-answers/show-answers'
-import ResultDetail from '../components/result_detail/result_detail'
+import ShowAnswers from '../components/show-results/show-results'
+import History from '../components/history/history'
+// import AddDataPage from '../pages/add-data/add-data'
 import React from 'react'
 
 type RoutesType = {
@@ -20,7 +21,8 @@ const publicRoutes: RoutesType[] = [
   { path: config.routes.reports, component: Reports },
   { path: config.routes.login, component: Login, isLogin: true },
   { path: config.routes.result, component: ShowAnswers },
-  { path: config.routes.result_detail, component: ResultDetail },
+  { path: config.routes.history, component: History },
+  // { path: config.routes.add_data, component: AddDataPage },
 ]
 
 const privateRoutes: RoutesType[] = []

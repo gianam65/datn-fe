@@ -3,69 +3,63 @@ import React, { useState, useEffect } from 'react'
 import { loadingState } from '../../recoil/store/app'
 import { useSetRecoilState } from 'recoil'
 import { httpGet } from '../../services/request'
-import { AnswersResponse } from '../../services/response'
 import { Chart } from 'react-chartjs-2'
+import { CarType } from '../../services/response'
 import {
   BarElement,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
   ArcElement,
-  LineController,
-  BarController,
-  ChartOptions,
 } from 'chart.js'
 
-ChartJS.register(
-  ArcElement,
-  BarController,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineController,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-)
+ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend)
 
-const options: ChartOptions = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top',
+      position: 'top' as const,
     },
     title: {
       display: true,
-      text: 'Biểu đồ điểm',
-    },
-  },
-  elements: {
-    bar: {
-      backgroundColor: '#3498db',
-      borderColor: '#2980b9',
-      borderWidth: 1,
+      text: 'Biểu đồ thống kê xe vào, xe ra',
     },
   },
 }
-
 const Reports: React.FC = () => {
   const [dataChart, setDataChart] = useState<number[]>([])
   const setLoading = useSetRecoilState(loadingState)
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true)
-      const response: AnswersResponse = await httpGet('/get_answers')
-      const scores: number[] = response.answers?.map((answer) => answer.score)
-      setDataChart(scores)
-      setLoading(false)
+      try {
+        setLoading(true)
+        const response = await httpGet('/records')
+        const cars = (response || []) as CarType[]
+
+        // Transform data to count cars by status
+        const statusCounts = cars.reduce(
+          (acc, car) => {
+            if (car.status === 'Có trong gara') {
+              acc[0] += 1
+            } else {
+              acc[1] += 1
+            }
+            return acc
+          },
+          [0, 0],
+        )
+
+        setDataChart(statusCounts)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
     }
 
     getData()
@@ -73,22 +67,26 @@ const Reports: React.FC = () => {
   }, [])
 
   const chartData = {
-    labels: dataChart.map((_, index) => (index + 1).toString()),
+    labels: ['Xe vào', 'Xe ra'],
     datasets: [
       {
-        label: 'Điểm',
+        label: '',
         data: dataChart,
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: ['#2ecc71', '#e74c3c'],
+        borderColor: ['#2980b9', '#c0392b'],
         borderWidth: 1,
-        fill: false,
       },
     ],
   }
-  console.log('chartData :>> ', chartData)
 
   return (
     <div className="reports-container">
-      <Chart type="bar" data={chartData} options={options} />
+      <div className="reports_item">
+        <Chart type="pie" data={chartData} options={options} />
+      </div>
+      <div className="reports_item">
+        <Chart type="bar" data={chartData} options={options} />
+      </div>
     </div>
   )
 }

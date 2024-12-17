@@ -1,17 +1,23 @@
 import './login.scss'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, notification } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import useRouter from '../../hooks/useRouter'
 import { HOME_PAGE_LINK } from '../../constants/constants'
+import { isLoginState } from '../../recoil/store/app'
+import { useSetRecoilState } from 'recoil'
 
 const Login = () => {
   const { pushRoute } = useRouter()
+  const setLogin = useSetRecoilState(isLoginState)
   const onFinish = (values: { username: string; password: string }) => {
     const { username, password } = values
 
     // Stimulate login case cause BE not ready
     if (username === 'admin' && password === 'password') {
       pushRoute(HOME_PAGE_LINK)
+      setLogin(true)
+    } else {
+      notification.error({ message: 'Sai tên đăng nhập hoặc mật khẩu' })
     }
   }
 

@@ -1,18 +1,22 @@
 import {
   HOME_PAGE_LINK,
-  MARK_EXAM_LINK,
+  SCAN_CAR_LINK,
   LOGIN_LINK,
   REPORT_LINK,
-  RESULT_TEST,
-  RESULT_TEST_DETAIL,
+  SCAN_RESULT,
+  SCAN_RESULT_DETAIL,
+  HISTORY_LINK,
+  // ADD_CAR_LINK,
 } from '../constants/constants.ts'
 const routes = {
   home: HOME_PAGE_LINK,
-  mark_exam: MARK_EXAM_LINK,
+  mark_exam: SCAN_CAR_LINK,
   login: LOGIN_LINK,
   reports: REPORT_LINK,
-  result: RESULT_TEST,
-  result_detail: RESULT_TEST_DETAIL,
+  result: SCAN_RESULT,
+  result_detail: SCAN_RESULT_DETAIL,
+  history: HISTORY_LINK,
+  // add_data: ADD_CAR_LINK,
 }
 
 export default routes

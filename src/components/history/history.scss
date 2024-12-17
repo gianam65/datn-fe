@@ -3,6 +3,17 @@
   flex-direction: column;
   gap: 8px;
 
+  .show__answer_top {
+    display: flex;
+    gap: 12px;
+    max-width: 350px;
+  }
+
+  .highlight {
+    color: var(--primary-color);
+    font-weight: bold;
+  }
+
   button {
     max-width: 200px;
   }
@@ -13,6 +24,13 @@
     cursor: pointer;
     &:hover {
       filter: brightness(0.7);
+    }
+  }
+
+  .delete__icon {
+    cursor: pointer;
+    &:hover {
+      color: red;
     }
   }
 }

@@ -1,9 +1,12 @@
 export const HOME_PAGE_LINK = '/'
-export const MARK_EXAM_LINK = '/cham-diem'
+export const SCAN_CAR_LINK = '/quet-bien-xe'
 export const LOGIN_LINK = '/dang-nhap'
-export const REPORT_LINK = '/bao-cao'
-export const RESULT_TEST = '/ket-qua'
-export const RESULT_TEST_DETAIL = '/chi-tiet'
+export const REPORT_LINK = '/thong-ke'
+export const SCAN_RESULT = '/danh-sach-xe'
+export const SCAN_RESULT_DETAIL = '/chi-tiet'
+export const LOGOUT_LINK = '/dang-xuat'
+export const ADD_CAR_LINK = '/them-xe'
+export const HISTORY_LINK = '/lich-su'
 
 export const CHOICE_TO_LABEL = {
   0: 'A',
